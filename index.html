@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CHORRY!!!</title>
+  <style>
+    body {
+      background: #ffe6f0;
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      margin-top: 50px;
+    }
+    h1 {
+      color: #ff3399;
+    }
+    img {
+      width: 200px;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    button {
+      padding: 15px 30px;
+      margin: 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+    }
+    #yesBtn { background: #ff99cc; }
+    #noBtn { background: #cccccc; }
+  </style>
+</head>
+<body>
+  <img src="bear.png" alt="Cute Bear Apology">
+  <p>Will you forgive me?</p>
+  <button id="yesBtn">Yes 💕</button>
+  <button id="noBtn">No 😢</button>
+
+<script>
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+
+  let noClicks = 0;
+
+  // No button logic
+  noBtn.addEventListener("click", () => {
+    noClicks++;
+
+    if (noClicks === 1) {
+      noBtn.innerText = "Are you sure?";
+    } else if (noClicks === 2) {
+      noBtn.innerText = "Really sure?? 😢";
+    } else {
+      // Make No button run away
+      noBtn.style.position = "absolute";
+      noBtn.style.top = Math.random() * window.innerHeight + "px";
+      noBtn.style.left = Math.random() * window.innerWidth + "px";
+    }
+
+    // Make Yes button bigger each time No is clicked
+    yesBtn.style.transform = `scale(${1 + noClicks * 0.5})`;
+  });
+
+  // Yes button logic (fixed in place)
+  yesBtn.addEventListener("click", () => {
+    yesBtn.innerText = "Yay! Thank you 💖";
+    alert("User clicked YES!");
+
+    // Telegram Bot API call
+    const token = "8584936861:AAFIgkBd_9m5exJG3-xTyO0Fmm_tMHkntlU";   // replace with your bot token
+    const chatId = "1065809214";    // replace with your chat ID
+    const message = "She clicked YES at " + new Date().toLocaleTimeString();
+
+    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text: message })
+    });
+  });
+</script>
+
+
+
+</body>
+</html>
