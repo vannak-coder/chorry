@@ -2,87 +2,102 @@
 <html>
 <head>
   <title>CHORRY!!!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background: #ffe6f0;
       font-family: 'Comic Sans MS', cursive;
       text-align: center;
       margin-top: 50px;
+      padding: 0 15px;
+      box-sizing: border-box;
     }
     h1 {
       color: #ff3399;
+      font-size: clamp(1.4rem, 6vw, 2.2rem);
     }
     img {
       width: 200px;
+      max-width: 60vw;
       animation: bounce 2s infinite;
     }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
+    p {
+      font-size: clamp(1rem, 4vw, 1.3rem);
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
     button {
       padding: 15px 30px;
-      margin: 20px;
-      font-size: 18px;
+      margin: 10px;
+      font-size: clamp(1rem, 4vw, 1.15rem);
       border-radius: 10px;
       cursor: pointer;
       border: none;
+      min-width: 100px;
+      touch-action: manipulation;
     }
     #yesBtn { background: #ff99cc; }
     #noBtn { background: #cccccc; }
+
+    @media (max-width: 480px) {
+      body { margin-top: 25px; }
+      button { padding: 12px 22px; }
+    }
   </style>
 </head>
 <body>
   <img src="bear.png" alt="Cute Bear Apology">
   <p>Will you forgive me?</p>
-  <button id="yesBtn">Yes 💕</button>
-  <button id="noBtn">No 😢</button>
+  <div class="btn-row">
+    <button id="yesBtn">Yes 💕</button>
+    <button id="noBtn">No 😢</button>
+  </div>
 
 <script>
+  // ⚠️ Only put your real token here if this file stays private
+  // (not pushed to a public GitHub repo, not hosted somewhere public).
+  const BOT_TOKEN = "8584936861:AAFIgkBd_9m5exJG3-xTyO0Fmm_tMHkntlU";
+  const CHAT_ID = "1065809214";
+
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
-
   let noClicks = 0;
 
-  // No button logic
   noBtn.addEventListener("click", () => {
     noClicks++;
-
     if (noClicks === 1) {
       noBtn.innerText = "Are you sure?";
     } else if (noClicks === 2) {
       noBtn.innerText = "Really sure?? 😢";
     } else {
-      // Make No button run away
-      noBtn.style.position = "absolute";
-      noBtn.style.top = Math.random() * window.innerHeight + "px";
-      noBtn.style.left = Math.random() * window.innerWidth + "px";
+      const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+      noBtn.style.position = "fixed";
+      noBtn.style.top = Math.random() * maxY + "px";
+      noBtn.style.left = Math.random() * maxX + "px";
     }
-
-    // Make Yes button bigger each time No is clicked
-    yesBtn.style.transform = `scale(${1 + noClicks * 0.5})`;
+    yesBtn.style.transform = `scale(${1 + noClicks * 0.3})`;
   });
 
-  // Yes button logic (fixed in place)
   yesBtn.addEventListener("click", () => {
     yesBtn.innerText = "Yay! Thank you 💖";
-    alert("Oun Chup Kg Hz!");
+    alert("Hurray!");
 
-    // Telegram Bot API call
-    const token = "8584936861:AAFIgkBd_9m5exJG3-xTyO0Fmm_tMHkntlU";   // replace with your bot token
-    const chatId = "1065809214";    // replace with your chat ID
     const message = "She clicked YES at " + new Date().toLocaleTimeString();
-
-    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text: message })
+      body: JSON.stringify({ chat_id: CHAT_ID, text: message })
     });
   });
 </script>
-
-
-
 </body>
 </html>
-
